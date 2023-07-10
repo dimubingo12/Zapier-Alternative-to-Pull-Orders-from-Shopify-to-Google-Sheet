@@ -1,17 +1,17 @@
-var API_KEY = "bXXXXXXXX";
-var PASSWORD = "shpat_XXXXXXX";
-var SHOPIFY_STORE_URL = "https://XXXXX.myshopify.com";
+var API_KEY = "bxxxxxxxxxxxxxx";
+var PASSWORD = "shpat_xxxxxxxxxxxxx";
+var SHOPIFY_STORE_URL = "https://xxxxxx.myshopify.com";
 var API_VERSION = "2023-04";
-var LAST_ORDER_ID_PROPERTY = 'lastOrderId';
-var START_ORDER_ID = "523XXXXXXX"; 
-function setStartingOrderId() {
-  PropertiesService.getScriptProperties().setProperty(LAST_ORDER_ID_PROPERTY, "523XXXXXXX");
-}
+var LAST_ORDER_ID_PROPERTY = 'lastOrderIdlll';
+var START_ORDER_ID = "5xxxxxx"; 
+var LAST_POPULATED_ROW_PROPERTY = 'lastPopulatedRow';
 
 function getShopifyOrders() {
   var lastOrderId = PropertiesService.getScriptProperties().getProperty(LAST_ORDER_ID_PROPERTY);
-   if (lastOrderId == null) {
+  var lastPopulatedRow = PropertiesService.getScriptProperties().getProperty(LAST_POPULATED_ROW_PROPERTY);
+  if (lastOrderId == null) {
     lastOrderId = START_ORDER_ID;
+    PropertiesService.getScriptProperties().setProperty(LAST_ORDER_ID_PROPERTY, lastOrderId);
   }
   var orders = [];
   var url = SHOPIFY_STORE_URL + "/admin/api/" + API_VERSION + "/orders.json?status=any";
@@ -25,7 +25,6 @@ function getShopifyOrders() {
     }
   };
 
-
   do {
     var response = UrlFetchApp.fetch(url, options);
     var data = JSON.parse(response.getContentText());
@@ -35,8 +34,11 @@ function getShopifyOrders() {
 
   if (orders.length > 0) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('ORDER RAW DATA');
-    var startRow = 1822; // Specify the starting row to update
+    var startRow = lastPopulatedRow ? parseInt(lastPopulatedRow) + 1 : 2094;
     var rowsToUpdate = [];
+    var lastPopulatedRow = startRow - 1;
+    
+
 
 orders.forEach(function (order) {
       var row = new Array(50).fill('');
@@ -98,6 +100,7 @@ var userAgent = order.client_details ? order.client_details.user_agent : '';
 
 
     rowsToUpdate.push(row);
+     lastPopulatedRow++;
     });
 
     var numRows = rowsToUpdate.length;
@@ -126,9 +129,12 @@ var userAgent = order.client_details ? order.client_details.user_agent : '';
     }
 
     var currentOrderId = orders[orders.length - 1].id.toString();
-      PropertiesService.getScriptProperties().setProperty(LAST_ORDER_ID_PROPERTY, currentOrderId);
-    }
+    PropertiesService.getScriptProperties().setProperty(LAST_ORDER_ID_PROPERTY, currentOrderId);
+    PropertiesService.getScriptProperties().setProperty(LAST_POPULATED_ROW_PROPERTY, lastPopulatedRow.toString());
   }
+}
+
+
 
 
 function getNextPageUrl(linkHeader) {
@@ -147,10 +153,15 @@ function getNextPageUrl(linkHeader) {
   return null;
 }
 
-function createTrigger() {
+
+function createTriggersp() {
   ScriptApp.newTrigger('getShopifyOrders')
     .timeBased()
     .everyMinutes(30)
     .create();
 }
+
+// Call the getShopifyOrders function initially to populate the data
+getShopifyOrders();
+
 
