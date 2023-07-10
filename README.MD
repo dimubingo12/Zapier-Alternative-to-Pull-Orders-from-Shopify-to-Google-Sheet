@@ -1,5 +1,5 @@
-Shopify Order Retrieval Script
-This script is designed to retrieve orders from a Shopify store and populate them into a Google Sheet. It utilizes the Shopify API and Google Apps Script to automate the process. The script is intended to be used as an alternative to Zapier for pulling orders from Shopify into a Google Sheet.
+Zapier Alternative to Pull Orders from Shopify to Google Sheet
+This repository contains a script that allows you to retrieve orders from a Shopify store and populate them into a Google Sheet. It serves as an alternative to using Zapier for pulling orders from Shopify into a Google Sheet. The script utilizes the Shopify API and Google Apps Script to automate the process.
 
 Prerequisites
 Before using this script, please ensure you have completed the following steps:
@@ -14,7 +14,7 @@ Set the API version:
 API Version: Replace API_VERSION with the desired Shopify API version.
 Configure the starting order ID:
 
-Starting Order ID: Replace START_ORDER_ID with the ID of the order from which you want to start retrieving orders. This is optional, and if not provided, the script will start from the last retrieved order ID.
+Starting Order ID: Replace START_ORDER_ID with the ID of the order from which you want to start retrieving orders. This step is optional, and if not provided, the script will start from the last retrieved order ID.
 Set up a Google Sheet:
 
 Create a Google Sheet in your Google Drive.
@@ -33,9 +33,8 @@ Concatenates the retrieved orders into an array.
 Populates the orders into the 'ORDER RAW DATA' sheet in the Google Sheet.
 Updates the last retrieved order ID in the script properties.
 Repeats the process until all orders are retrieved.
-
-Important Note
-To ensure a smooth and automated flow, it is essential to set up a trigger for the setStartingOrderId() function to run every 30 minutes. This trigger ensures that the script starts from the correct order ID when fetching orders.
-
+Important Note: To ensure a smooth and automated flow, it is essential to set up a trigger for the setStartingOrderId() function to run every 30 minutes. This trigger ensures that the script starts from the correct order ID when fetching orders.
 
 For any further questions or concerns, please refer to the GitHub repository Zapier-Alternative-to-Pull-Orders-from-Shopify-to-Google-Sheet.
+
+Please feel free to customize the content and formatting of the README.md file according to your specific requirements.
